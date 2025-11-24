@@ -1,0 +1,66 @@
+# ============================================
+# CREDENCIAIS E CONFIGURAÇÕES SENSÍVEIS
+# ============================================
+# Environment variables
+.env
+env.js
+
+# Firebase credentials
+firebase-config.js
+
+# ============================================
+# DOCUMENTAÇÃO TEMPORÁRIA / DEBUG
+# ============================================
+# Arquivos de correção de segurança (uso local)
+AÇÃO-IMEDIATA.md
+CORREÇÃO-SEGURANÇA.md
+verificacao-seguranca.html
+
+# Páginas de setup e debug (uso local)
+setup.html
+debug.html
+
+# ============================================
+# SYSTEM FILES
+# ============================================
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+[Tt]humbs.db
+*.stackdump
+
+# ============================================
+# IDE / EDITOR
+# ============================================
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.swp
+*~
+
+# ============================================
+# LOGS
+# ============================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============================================
+# DEPENDENCIES (se houver)
+# ============================================
+node_modules/
+.npm
+.node_repl_history
+
+# ============================================
+# BUILD / DIST (se houver)
+# ============================================
+dist/
+build/
+*.min.js
+*.min.css
