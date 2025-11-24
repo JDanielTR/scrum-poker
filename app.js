@@ -8,17 +8,20 @@ const CARD_SETS = {
 };
 
 // Firebase Configuration
-// IMPORTANTE: Configure suas credenciais em um arquivo .env
-// Para desenvolvimento local, você pode criar um arquivo .env baseado no .env.example
-// Para produção, use variáveis de ambiente do seu host
+// IMPORTANTE: Configure suas credenciais de uma das formas:
+// 1. Crie um arquivo env.js baseado no env.js.example (desenvolvimento local)
+// 2. Configure diretamente aqui (NÃO RECOMENDADO se for commitar)
+// 3. Use variáveis de ambiente via GitHub Actions (produção segura)
+
+// Para GitHub Pages funcionar AGORA, descomente e configure abaixo:
 const firebaseConfig = {
-  apiKey: window.ENV?.FIREBASE_API_KEY || "YOUR_API_KEY_HERE",
-  authDomain: window.ENV?.FIREBASE_AUTH_DOMAIN || "YOUR_PROJECT.firebaseapp.com",
-  databaseURL: window.ENV?.FIREBASE_DATABASE_URL || "https://YOUR_PROJECT.firebaseio.com",
-  projectId: window.ENV?.FIREBASE_PROJECT_ID || "YOUR_PROJECT_ID",
-  storageBucket: window.ENV?.FIREBASE_STORAGE_BUCKET || "YOUR_PROJECT.appspot.com",
-  messagingSenderId: window.ENV?.FIREBASE_MESSAGING_SENDER_ID || "YOUR_SENDER_ID",
-  appId: window.ENV?.FIREBASE_APP_ID || "YOUR_APP_ID"
+  apiKey: window.ENV?.FIREBASE_API_KEY || "AIzaSyACUctttx9hWHrFe5Mv_YnoRWmAqy4eVYI",
+  authDomain: window.ENV?.FIREBASE_AUTH_DOMAIN || "scrumpokergithubio.firebaseapp.com",
+  databaseURL: window.ENV?.FIREBASE_DATABASE_URL || "https://scrumpokergithubio-default-rtdb.firebaseio.com",
+  projectId: window.ENV?.FIREBASE_PROJECT_ID || "scrumpokergithubio",
+  storageBucket: window.ENV?.FIREBASE_STORAGE_BUCKET || "scrumpokergithubio.firebasestorage.app",
+  messagingSenderId: window.ENV?.FIREBASE_MESSAGING_SENDER_ID || "553199759268",
+  appId: window.ENV?.FIREBASE_APP_ID || "1:553199759268:web:a3d6f45f483ed3d2d51b31"
 };
 
 // Initialize Firebase
