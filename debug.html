@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico - Scrum Poker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .status-item {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-item.success {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+
+        .status-item.error {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+        }
+
+        .status-item.warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+        }
+
+        .icon {
+            font-size: 24px;
+            min-width: 30px;
+        }
+
+        .message {
+            flex: 1;
+        }
+
+        .message strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button.secondary {
+            background: #6c757d;
+        }
+
+        button.secondary:hover {
+            background: #5a6268;
+        }
+
+        .room-list {
+            max-height: 400px;
+            overflow-y: auto;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .room-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .room-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .room-item p {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 5px 0;
+        }
+
+        .room-item small {
+            color: #999;
+        }
+
+        code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border: 2px solid #2196F3;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .info-box h3 {
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Voltar para Scrum Poker</a>
+        
+        <h1>🔍 Diagnóstico do Sistema</h1>
+        <p class="subtitle">Ferramentas de debug e teste de conectividade</p>
+
+        <!-- Status do Sistema -->
+        <div class="section">
+            <h2>📊 Status do Sistema</h2>
+            <div id="systemStatus">
+                <p>Clique em "Executar Diagnóstico" para verificar</p>
+            </div>
+            <button onclick="runDiagnostics()">🔍 Executar Diagnóstico</button>
+        </div>
+
+        <!-- Configuração Firebase -->
+        <div class="section">
+            <h2>⚙️ Configuração do Firebase</h2>
+            <div id="firebaseConfig">
+                <p>Carregando...</p>
+            </div>
+        </div>
+
+        <!-- Lista de Salas -->
+        <div class="section">
+            <h2>🚪 Salas Ativas</h2>
+            <button onclick="listRooms()">📋 Listar Todas as Salas</button>
+            <button onclick="clearOldRooms()" class="secondary">🗑️ Limpar Salas Antigas (&gt;24h)</button>
+            <div id="roomsList">
+                <p>Clique em "Listar Todas as Salas" para ver</p>
+            </div>
+        </div>
+
+        <!-- Informações de Debug -->
+        <div class="info-box">
+            <h3>ℹ️ Informações de Debug</h3>
+            <p><strong>URL atual:</strong> <code id="currentUrl"></code></p>
+            <p><strong>Timestamp:</strong> <code id="timestamp"></code></p>
+            <p><strong>Navegador:</strong> <code id="browser"></code></p>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    
+    <!-- Environment Variables (opcional) -->
+    <script>
+        (function() {
+            var script = document.createElement('script');
+            script.src = 'env.js';
+            script.onerror = function() {
+                console.log('ℹ️ env.js não encontrado - usando configuração padrão');
+            };
+            document.head.appendChild(script);
+        })();
+    </script>
+
+    <script>
+        // Carregar configuração do Firebase do app.js
+        const firebaseConfig = {
+            apiKey: window.ENV?.FIREBASE_API_KEY || "AIzaSyACUctttx9hWHrFe5Mv_YnoRWmAqy4eVYI",
+            authDomain: window.ENV?.FIREBASE_AUTH_DOMAIN || "scrumpokergithubio.firebaseapp.com",
+            databaseURL: window.ENV?.FIREBASE_DATABASE_URL || "https://scrumpokergithubio-default-rtdb.firebaseio.com",
+            projectId: window.ENV?.FIREBASE_PROJECT_ID || "scrumpokergithubio",
+            storageBucket: window.ENV?.FIREBASE_STORAGE_BUCKET || "scrumpokergithubio.firebasestorage.app",
+            messagingSenderId: window.ENV?.FIREBASE_MESSAGING_SENDER_ID || "553199759268",
+            appId: window.ENV?.FIREBASE_APP_ID || "1:553199759268:web:a3d6f45f483ed3d2d51b31"
+        };
+
+        let database;
+
+        // Inicializar Firebase
+        function initFirebase() {
+            try {
+                if (typeof firebase !== 'undefined') {
+                    firebase.initializeApp(firebaseConfig);
+                    database = firebase.database();
+                    console.log('✅ Firebase initialized successfully');
+                    return true;
+                }
+            } catch (error) {
+                console.error('❌ Firebase initialization error:', error);
+                return false;
+            }
+            return false;
+        }
+
+        // Exibir informações de debug
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('currentUrl').textContent = window.location.href;
+            document.getElementById('timestamp').textContent = new Date().toLocaleString('pt-BR');
+            document.getElementById('browser').textContent = navigator.userAgent;
+            
+            showFirebaseConfig();
+        });
+
+        // Mostrar configuração do Firebase
+        function showFirebaseConfig() {
+            const configDiv = document.getElementById('firebaseConfig');
+            const apiKeyMasked = firebaseConfig.apiKey.substring(0, 15) + '...' + firebaseConfig.apiKey.slice(-4);
+            
+            configDiv.innerHTML = `
+                <pre>{
+  "apiKey": "${apiKeyMasked}",
+  "authDomain": "${firebaseConfig.authDomain}",
+  "databaseURL": "${firebaseConfig.databaseURL}",
+  "projectId": "${firebaseConfig.projectId}",
+  "storageBucket": "${firebaseConfig.storageBucket}",
+  "messagingSenderId": "${firebaseConfig.messagingSenderId}",
+  "appId": "${firebaseConfig.appId.substring(0, 20)}..."
+}</pre>
+            `;
+        }
+
+        // Executar diagnósticos
+        function runDiagnostics() {
+            const statusDiv = document.getElementById('systemStatus');
+            statusDiv.innerHTML = '<p>Executando diagnósticos...</p>';
+
+            const checks = [];
+
+            // Check 1: Firebase SDK carregado
+            checks.push(checkFirebaseSDK());
+
+            // Check 2: Variáveis de ambiente
+            checks.push(checkEnvironmentVariables());
+
+            // Check 3: Inicialização do Firebase
+            checks.push(checkFirebaseInit());
+
+            // Check 4: Conectividade do Database
+            if (database) {
+                checkDatabaseConnectivity().then(result => {
+                    checks.push(result);
+                    displayChecks(checks);
+                });
+            } else {
+                displayChecks(checks);
+            }
+        }
+
+        function checkFirebaseSDK() {
+            if (typeof firebase !== 'undefined') {
+                return {
+                    status: 'success',
+                    icon: '✅',
+                    title: 'Firebase SDK',
+                    message: 'SDK do Firebase carregado corretamente'
+                };
+            } else {
+                return {
+                    status: 'error',
+                    icon: '❌',
+                    title: 'Firebase SDK',
+                    message: 'SDK do Firebase não encontrado'
+                };
+            }
+        }
+
+        function checkEnvironmentVariables() {
+            if (window.ENV) {
+                return {
+                    status: 'success',
+                    icon: '✅',
+                    title: 'Variáveis de Ambiente',
+                    message: 'window.ENV definido (env.js carregado)'
+                };
+            } else {
+                return {
+                    status: 'warning',
+                    icon: '⚠️',
+                    title: 'Variáveis de Ambiente',
+                    message: 'window.ENV não definido - usando configuração padrão'
+                };
+            }
+        }
+
+        function checkFirebaseInit() {
+            const initialized = initFirebase();
+            if (initialized) {
+                return {
+                    status: 'success',
+                    icon: '✅',
+                    title: 'Inicialização do Firebase',
+                    message: 'Firebase inicializado com sucesso'
+                };
+            } else {
+                return {
+                    status: 'error',
+                    icon: '❌',
+                    title: 'Inicialização do Firebase',
+                    message: 'Erro ao inicializar Firebase'
+                };
+            }
+        }
+
+        async function checkDatabaseConnectivity() {
+            try {
+                const testRef = database.ref('.info/connected');
+                const snapshot = await testRef.once('value');
+                const connected = snapshot.val();
+                
+                if (connected) {
+                    return {
+                        status: 'success',
+                        icon: '✅',
+                        title: 'Conectividade do Database',
+                        message: 'Conectado ao Firebase Realtime Database'
+                    };
+                } else {
+                    return {
+                        status: 'error',
+                        icon: '❌',
+                        title: 'Conectividade do Database',
+                        message: 'Sem conexão com o Firebase Database'
+                    };
+                }
+            } catch (error) {
+                return {
+                    status: 'error',
+                    icon: '❌',
+                    title: 'Conectividade do Database',
+                    message: 'Erro ao verificar conexão: ' + error.message
+                };
+            }
+        }
+
+        function displayChecks(checks) {
+            const statusDiv = document.getElementById('systemStatus');
+            statusDiv.innerHTML = '';
+            
+            checks.forEach(check => {
+                const item = document.createElement('div');
+                item.className = `status-item ${check.status}`;
+                item.innerHTML = `
+                    <span class="icon">${check.icon}</span>
+                    <div class="message">
+                        <strong>${check.title}</strong>
+                        <span>${check.message}</span>
+                    </div>
+                `;
+                statusDiv.appendChild(item);
+            });
+        }
+
+        // Listar salas
+        function listRooms() {
+            if (!database) {
+                alert('Firebase não inicializado. Execute o diagnóstico primeiro.');
+                return;
+            }
+
+            const roomsDiv = document.getElementById('roomsList');
+            roomsDiv.innerHTML = '<p>Carregando salas...</p>';
+
+            database.ref('rooms').once('value')
+                .then(snapshot => {
+                    const rooms = snapshot.val();
+                    
+                    if (!rooms || Object.keys(rooms).length === 0) {
+                        roomsDiv.innerHTML = '<div class="status-item warning"><span class="icon">⚠️</span><div class="message">Nenhuma sala encontrada</div></div>';
+                        return;
+                    }
+
+                    let html = '<div class="room-list">';
+                    html += `<p><strong>Total de salas:</strong> ${Object.keys(rooms).length}</p>`;
+                    
+                    Object.entries(rooms).forEach(([roomId, room]) => {
+                        const participantCount = Object.keys(room.participants || {}).length;
+                        const createdDate = new Date(room.createdAt);
+                        const age = Math.floor((Date.now() - room.createdAt) / (1000 * 60 * 60));
+                        
+                        html += `
+                            <div class="room-item">
+                                <h4>🚪 Sala: ${roomId}</h4>
+                                <p><strong>Participantes:</strong> ${participantCount}</p>
+                                <p><strong>História atual:</strong> ${room.currentStory || '(nenhuma)'}</p>
+                                <p><strong>Cartas reveladas:</strong> ${room.revealed ? 'Sim' : 'Não'}</p>
+                                <p><strong>Criada em:</strong> ${createdDate.toLocaleString('pt-BR')}</p>
+                                <small>Idade: ${age}h</small>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    roomsDiv.innerHTML = html;
+                })
+                .catch(error => {
+                    roomsDiv.innerHTML = `<div class="status-item error"><span class="icon">❌</span><div class="message">Erro ao listar salas: ${error.message}</div></div>`;
+                });
+        }
+
+        // Limpar salas antigas
+        function clearOldRooms() {
+            if (!database) {
+                alert('Firebase não inicializado. Execute o diagnóstico primeiro.');
+                return;
+            }
+
+            if (!confirm('Deseja realmente limpar salas com mais de 24 horas?')) {
+                return;
+            }
+
+            const roomsDiv = document.getElementById('roomsList');
+            roomsDiv.innerHTML = '<p>Limpando salas antigas...</p>';
+
+            const now = Date.now();
+            const dayInMs = 24 * 60 * 60 * 1000;
+
+            database.ref('rooms').once('value')
+                .then(snapshot => {
+                    const rooms = snapshot.val();
+                    let removedCount = 0;
+                    const promises = [];
+
+                    if (rooms) {
+                        Object.entries(rooms).forEach(([roomId, room]) => {
+                            if (now - room.createdAt > dayInMs) {
+                                promises.push(
+                                    database.ref('rooms/' + roomId).remove()
+                                        .then(() => {
+                                            console.log('Removed old room:', roomId);
+                                            removedCount++;
+                                        })
+                                );
+                            }
+                        });
+                    }
+
+                    return Promise.all(promises).then(() => removedCount);
+                })
+                .then(removedCount => {
+                    roomsDiv.innerHTML = `<div class="status-item success"><span class="icon">✅</span><div class="message"><strong>Limpeza concluída</strong><br>${removedCount} sala(s) removida(s)</div></div>`;
+                })
+                .catch(error => {
+                    roomsDiv.innerHTML = `<div class="status-item error"><span class="icon">❌</span><div class="message">Erro ao limpar salas: ${error.message}</div></div>`;
+                });
+        }
+    </script>
+</body>
+</html>
