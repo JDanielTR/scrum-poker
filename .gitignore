@@ -1,20 +1,11 @@
 # ============================================
-# CREDENCIAIS E CONFIGURAÇÕES SENSÍVEIS
-# ============================================
-# Environment variables
-.env
-env.js
-
-# Firebase credentials
-firebase-config.js
-
-# ============================================
-# DOCUMENTAÇÃO TEMPORÁRIA / DEBUG
+# DOCUMENTAÇÃO TEMPORÁRIA
 # ============================================
 # Arquivos de correção de segurança (uso local)
 AÇÃO-IMEDIATA.md
 CORREÇÃO-SEGURANÇA.md
 verificacao-seguranca.html
+PRONTO-PARA-COMMIT.md
 
 # Páginas de setup (uso local)
 setup.html

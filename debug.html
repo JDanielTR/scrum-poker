@@ -236,28 +236,16 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     
-    <!-- Environment Variables (opcional) -->
     <script>
-        (function() {
-            var script = document.createElement('script');
-            script.src = 'env.js';
-            script.onerror = function() {
-                console.log('ℹ️ env.js não encontrado - usando configuração padrão');
-            };
-            document.head.appendChild(script);
-        })();
-    </script>
-
-    <script>
-        // Carregar configuração do Firebase do app.js
+        // Configuração do Firebase
         const firebaseConfig = {
-            apiKey: window.ENV?.FIREBASE_API_KEY || "AIzaSyACUctttx9hWHrFe5Mv_YnoRWmAqy4eVYI",
-            authDomain: window.ENV?.FIREBASE_AUTH_DOMAIN || "scrumpokergithubio.firebaseapp.com",
-            databaseURL: window.ENV?.FIREBASE_DATABASE_URL || "https://scrumpokergithubio-default-rtdb.firebaseio.com",
-            projectId: window.ENV?.FIREBASE_PROJECT_ID || "scrumpokergithubio",
-            storageBucket: window.ENV?.FIREBASE_STORAGE_BUCKET || "scrumpokergithubio.firebasestorage.app",
-            messagingSenderId: window.ENV?.FIREBASE_MESSAGING_SENDER_ID || "553199759268",
-            appId: window.ENV?.FIREBASE_APP_ID || "1:553199759268:web:a3d6f45f483ed3d2d51b31"
+            apiKey: "AIzaSyACUctttx9hWHrFe5Mv_YnoRWmAqy4eVYI",
+            authDomain: "scrumpokergithubio.firebaseapp.com",
+            databaseURL: "https://scrumpokergithubio-default-rtdb.firebaseio.com",
+            projectId: "scrumpokergithubio",
+            storageBucket: "scrumpokergithubio.firebasestorage.app",
+            messagingSenderId: "553199759268",
+            appId: "1:553199759268:web:a3d6f45f483ed3d2d51b31"
         };
 
         let database;

@@ -53,69 +53,42 @@ Site de Planning Poker para times ágeis realizarem estimativas colaborativas em
 
 ### 5. Configurar o Site
 
-#### ⚠️ IMPORTANTE: Segurança das Credenciais
-
-**NUNCA commite suas credenciais do Firebase diretamente no código!**
-
-Para proteger suas credenciais:
-
-1. Copie o arquivo `env.js.example` para `env.js`:
-   ```bash
-   cp env.js.example env.js
-   ```
-
-2. Abra o arquivo `env.js` e substitua os valores pelas suas credenciais do Firebase:
+1. Abra o arquivo `app.js`
+2. Localize o objeto `firebaseConfig` no início do arquivo (linhas ~11-19)
+3. Substitua os valores pelas suas credenciais do Firebase:
 
 ```javascript
-window.ENV = {
-  FIREBASE_API_KEY: "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-  FIREBASE_AUTH_DOMAIN: "seu-projeto.firebaseapp.com",
-  FIREBASE_DATABASE_URL: "https://seu-projeto-default-rtdb.firebaseio.com",
-  FIREBASE_PROJECT_ID: "seu-projeto",
-  FIREBASE_STORAGE_BUCKET: "seu-projeto.appspot.com",
-  FIREBASE_MESSAGING_SENDER_ID: "123456789012",
-  FIREBASE_APP_ID: "1:123456789012:web:xxxxxxxxxxxxx"
+const firebaseConfig = {
+  apiKey: "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+  authDomain: "seu-projeto.firebaseapp.com",
+  databaseURL: "https://seu-projeto-default-rtdb.firebaseio.com",
+  projectId: "seu-projeto",
+  storageBucket: "seu-projeto.appspot.com",
+  messagingSenderId: "123456789012",
+  appId: "1:123456789012:web:xxxxxxxxxxxxx"
 };
 ```
 
-3. O arquivo `env.js` está no `.gitignore` e **NÃO será commitado**
-4. O arquivo `app.js` carrega as credenciais do `window.ENV`
-
-#### Alternativa: Usar Variáveis de Ambiente do GitHub Pages
-
-Para maior segurança em produção:
-
-1. Remova as credenciais do `env.js`
-2. Configure as credenciais como **Secrets** no GitHub:
-   - Vá em **Settings** > **Secrets and variables** > **Actions**
-   - Adicione cada credencial como um secret
-3. Use GitHub Actions para injetar as variáveis durante o deploy
+**⚠️ Nota sobre Segurança:**
+- As credenciais do Firebase precisam estar no código para sites estáticos funcionarem
+- A segurança real é garantida pelas **Regras de Segurança do Firebase**
+- Configure regras adequadas e limite domínios autorizados (ver seção de Segurança)
 
 ### 6. Publicar no GitHub Pages
 
 1. Crie um repositório no GitHub (público ou privado)
-2. **ANTES de fazer commit**, verifique que o `.gitignore` está configurado:
-   ```
-   # Environment variables
-   .env
-   env.js
-   
-   # Firebase credentials
-   firebase-config.js
-   ```
-3. Faça upload dos arquivos:
+2. Faça upload dos arquivos:
    - `index.html`
    - `styles.css`
    - `app.js`
-   - `env.js.example` (template sem credenciais)
-   - `.gitignore`
-   - **NÃO ENVIE** `env.js` (com credenciais reais)
-4. Para o GitHub Pages funcionar, você precisa criar `env.js` diretamente no repositório ou configurar secrets
-5. Vá em **Settings** > **Pages**
-6. Em "Source", selecione "Deploy from a branch"
-7. Escolha a branch `main` e pasta `/ (root)`
-8. Clique em "Save"
-9. Aguarde alguns minutos e acesse o link fornecido
+   - `debug.html`
+   - `README.md`
+   - `SECURITY.md`
+3. Vá em **Settings** > **Pages**
+4. Em "Source", selecione "Deploy from a branch"
+5. Escolha a branch `main` e pasta `/ (root)`
+6. Clique em "Save"
+7. Aguarde alguns minutos e acesse o link fornecido
 
 **Exemplo de link**: `https://seu-usuario.github.io/nome-do-repositorio/`
 

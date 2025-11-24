@@ -140,19 +140,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     
-    <!-- Environment Variables (opcional - para desenvolvimento local) -->
-    <script>
-        // Tenta carregar env.js se existir, senão continua sem erro
-        (function() {
-            var script = document.createElement('script');
-            script.src = 'env.js';
-            script.onerror = function() {
-                console.log('ℹ️ env.js não encontrado - usando configuração padrão do app.js');
-            };
-            document.head.appendChild(script);
-        })();
-    </script>
-    
     <!-- Application -->
     <script src="app.js"></script>
 </body>

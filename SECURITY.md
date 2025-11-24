@@ -1,86 +1,44 @@
 # 🔒 Guia de Segurança - Scrum Poker
 
-## ⚠️ Problema Identificado pelo GitHub
+## 📌 Sobre Credenciais do Firebase em Sites Estáticos
 
-O GitHub detectou que credenciais do Firebase foram expostas no repositório. Isso representa um risco de segurança, pois qualquer pessoa com acesso ao código pode usar suas credenciais.
+### Por que as credenciais estão no código?
 
-## ✅ Solução Implementada
+Para sites estáticos (como GitHub Pages), as credenciais do Firebase **precisam** estar no código JavaScript do cliente. Isso é:
 
-### 1. Estrutura de Arquivos de Segurança
+- ✅ **Normal** - Todos os sites Firebase públicos fazem isso
+- ✅ **Esperado** - O Firebase foi projetado para isso
+- ✅ **Seguro** - Quando configurado corretamente
 
-- **`.env`** - Contém suas credenciais REAIS (NÃO commitar)
-- **`.env.example`** - Template sem credenciais para compartilhar
-- **`env.js`** - Script que carrega credenciais no navegador (NÃO commitar)
-- **`env.js.example`** - Template do env.js para compartilhar
-- **`.gitignore`** - Garante que arquivos sensíveis não sejam commitados
+### A segurança REAL vem das Regras do Firebase
 
-### 2. Próximos Passos (IMPORTANTE!)
+As API Keys do Firebase são **identificadores públicos**, não segredos. A verdadeira segurança está em:
 
-#### Passo 1: Revogar a API Key Exposta
+1. **Regras de Segurança do Firebase** (controle de acesso)
+2. **Domínios autorizados** (limitar onde o app pode rodar)
+3. **Monitoramento de uso** (detectar abusos)
 
-1. Acesse o [Firebase Console](https://console.firebase.google.com/)
-2. Selecione seu projeto
-3. Vá em **Configurações do Projeto** (⚙️) > **Configurações gerais**
-4. Role até "Seus aplicativos" > "SDK do Firebase"
-5. Clique em **Chaves de API da Web**
-6. **DELETE a chave atual** (a que foi exposta)
-7. **Crie uma nova chave**
+## 🛡️ Como Proteger Seu Projeto
 
-#### Passo 2: Atualizar env.js com a Nova Chave
+### 1. Configure Regras de Segurança Adequadas
 
-1. Abra o arquivo `env.js` (no seu computador)
-2. Substitua `FIREBASE_API_KEY` pela nova chave gerada
-3. **NÃO commite este arquivo!**
+No Firebase Console, vá em **Realtime Database > Rules** e configure:
 
-#### Passo 3: Limpar o Histórico do Git
-
-As credenciais antigas ainda estão no histórico do Git. Para removê-las completamente:
-
-**Opção 1: Usando BFG Repo-Cleaner (Recomendado)**
-
-```bash
-# 1. Instale o BFG
-# Download em: https://rtyley.github.io/bfg-repo-cleaner/
-
-# 2. Faça um backup do repositório
-git clone --mirror https://github.com/seu-usuario/seu-repo.git
-
-# 3. Execute o BFG para remover as credenciais
-java -jar bfg.jar --replace-text passwords.txt seu-repo.git
-
-# 4. Limpe o histórico
-cd seu-repo.git
-git reflog expire --expire=now --all
-git gc --prune=now --aggressive
-
-# 5. Force push
-git push --force
+```json
+{
+  "rules": {
+    "rooms": {
+      "$roomId": {
+        ".read": true,
+        ".write": true,
+        ".validate": "newData.hasChildren(['participants'])"
+      }
+    }
+  }
+}
 ```
 
-**Opção 2: Usando git filter-repo**
-
-```bash
-# 1. Instale git filter-repo
-pip install git-filter-repo
-
-# 2. Remova o arquivo do histórico
-git filter-repo --path app.js --invert-paths
-
-# 3. Force push
-git push --force
-```
-
-**Opção 3: Criar Repositório Novo (Mais Simples)**
-
-Se você não tem muitos commits importantes:
-
-1. Delete o repositório atual no GitHub
-2. Crie um novo repositório
-3. Faça o primeiro commit com os arquivos já protegidos
-
-#### Passo 4: Verificar Segurança das Regras do Firebase
-
-Suas regras atuais permitem acesso total. Para produção, use regras mais restritivas:
+**Regras mais restritivas (recomendado para produção):**
 
 ```json
 {
@@ -95,98 +53,56 @@ Suas regras atuais permitem acesso total. Para produção, use regras mais restr
 }
 ```
 
-#### Passo 5: Monitorar Uso do Firebase
+### 2. Limite Domínios Autorizados
 
-1. Acesse o Firebase Console
-2. Vá em **Usage and billing**
-3. Monitore se há acessos anormais
-4. Configure alertas de uso
+1. No Firebase Console, vá em **Authentication**
+2. Clique em **Sign-in method**
+3. Role até **Authorized domains**
+4. Adicione apenas seus domínios:
+   - `seu-usuario.github.io`
+   - `localhost` (para desenvolvimento)
+5. Remova domínios desnecessários
 
-### 3. Deploy Seguro no GitHub Pages
+### 3. Configure Alertas de Uso
 
-Para deployar no GitHub Pages com segurança:
+1. No Firebase Console, vá em **Usage and billing**
+2. Configure **Budget alerts**:
+   - Defina um limite mensal (ex: 10 GB de bandwidth)
+   - Adicione seu email para alertas
+3. Monitore o uso regularmente
 
-**Opção A: Arquivo env.js no Repositório (Para Sites Públicos)**
+### 4. Revise Acessos Regularmente
 
-Se o site é público, as credenciais do Firebase precisam estar no cliente de qualquer forma. Neste caso:
+Use a página **debug.html** para:
+- Ver salas ativas
+- Limpar salas antigas (&gt;24h)
+- Monitorar padrões de uso anormais
 
-1. Use **Regras de Segurança do Firebase** para controlar o acesso
-2. Configure um domínio específico no Firebase
-3. Limite a API Key a esse domínio
+## ✅ Checklist de Segurança
 
-**Opção B: GitHub Actions com Secrets (Mais Seguro)**
-
-1. Vá em **Settings** > **Secrets and variables** > **Actions**
-2. Adicione cada credencial como secret:
-   - `FIREBASE_API_KEY`
-   - `FIREBASE_AUTH_DOMAIN`
-   - etc.
-
-3. Crie um workflow `.github/workflows/deploy.yml`:
-
-```yaml
-name: Deploy to GitHub Pages
-
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      
-      - name: Create env.js
-        run: |
-          echo "(function() {" > env.js
-          echo "  window.ENV = {" >> env.js
-          echo "    FIREBASE_API_KEY: '${{ secrets.FIREBASE_API_KEY }}'," >> env.js
-          echo "    FIREBASE_AUTH_DOMAIN: '${{ secrets.FIREBASE_AUTH_DOMAIN }}'," >> env.js
-          echo "    FIREBASE_DATABASE_URL: '${{ secrets.FIREBASE_DATABASE_URL }}'," >> env.js
-          echo "    FIREBASE_PROJECT_ID: '${{ secrets.FIREBASE_PROJECT_ID }}'," >> env.js
-          echo "    FIREBASE_STORAGE_BUCKET: '${{ secrets.FIREBASE_STORAGE_BUCKET }}'," >> env.js
-          echo "    FIREBASE_MESSAGING_SENDER_ID: '${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}'," >> env.js
-          echo "    FIREBASE_APP_ID: '${{ secrets.FIREBASE_APP_ID }}'" >> env.js
-          echo "  };" >> env.js
-          echo "})();" >> env.js
-      
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
-```
-
-### 4. Checklist de Segurança
-
-- [ ] Revoguei a API Key antiga no Firebase
-- [ ] Criei uma nova API Key
-- [ ] Atualizei o `env.js` local com a nova chave
-- [ ] Removi as credenciais antigas do histórico do Git
-- [ ] Verifiquei que `.gitignore` está protegendo `env.js`
 - [ ] Configurei regras de segurança no Firebase
-- [ ] Monitorei o uso do Firebase por atividades suspeitas
-- [ ] (Opcional) Configurei domínios autorizados no Firebase
+- [ ] Adicionei domínios autorizados no Firebase
+- [ ] Configurei alertas de uso no Firebase
+- [ ] Monitoro salas e uso regularmente via debug.html
+- [ ] Limpo salas antigas periodicamente
 
-### 5. Boas Práticas
+## 🎯 Boas Práticas
 
-✅ **FAÇA:**
-- Use `.gitignore` para proteger arquivos sensíveis
-- Separe credenciais em arquivos de ambiente
-- Revogue credenciais imediatamente após exposição
-- Use regras de segurança do Firebase
-- Monitore uso e acessos
+### FAÇA:
+- Configure regras de segurança restritivas no Firebase
+- Limite domínios autorizados
+- Monitore uso regularmente
+- Use a página de debug para manutenção
+- Configure alertas de billing
 
-❌ **NÃO FAÇA:**
-- Commitar credenciais diretamente no código
+### NÃO FAÇA:
 - Compartilhar credenciais em mensagens ou emails
-- Usar as mesmas credenciais em dev e produção
-- Ignorar alertas de segurança do GitHub
+- Usar as mesmas credenciais em múltiplos projetos
+- Ignorar alertas de uso anormal
+- Deixar regras de segurança abertas em produção
 
 ## 📚 Referências
 
 - [Firebase Security Rules](https://firebase.google.com/docs/rules)
+- [Firebase Best Practices](https://firebase.google.com/docs/web/best-practices)
 - [GitHub Security Best Practices](https://docs.github.com/en/code-security)
-- [BFG Repo-Cleaner](https://rtyley.github.io/bfg-repo-cleaner/)
-- [git filter-repo](https://github.com/newren/git-filter-repo)

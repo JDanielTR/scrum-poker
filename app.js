@@ -8,20 +8,14 @@ const CARD_SETS = {
 };
 
 // Firebase Configuration
-// IMPORTANTE: Configure suas credenciais de uma das formas:
-// 1. Crie um arquivo env.js baseado no env.js.example (desenvolvimento local)
-// 2. Configure diretamente aqui (NÃO RECOMENDADO se for commitar)
-// 3. Use variáveis de ambiente via GitHub Actions (produção segura)
-
-// Para GitHub Pages funcionar AGORA, descomente e configure abaixo:
 const firebaseConfig = {
-  apiKey: window.ENV?.FIREBASE_API_KEY || "AIzaSyACUctttx9hWHrFe5Mv_YnoRWmAqy4eVYI",
-  authDomain: window.ENV?.FIREBASE_AUTH_DOMAIN || "scrumpokergithubio.firebaseapp.com",
-  databaseURL: window.ENV?.FIREBASE_DATABASE_URL || "https://scrumpokergithubio-default-rtdb.firebaseio.com",
-  projectId: window.ENV?.FIREBASE_PROJECT_ID || "scrumpokergithubio",
-  storageBucket: window.ENV?.FIREBASE_STORAGE_BUCKET || "scrumpokergithubio.firebasestorage.app",
-  messagingSenderId: window.ENV?.FIREBASE_MESSAGING_SENDER_ID || "553199759268",
-  appId: window.ENV?.FIREBASE_APP_ID || "1:553199759268:web:a3d6f45f483ed3d2d51b31"
+  apiKey: "AIzaSyACUctttx9hWHrFe5Mv_YnoRWmAqy4eVYI",
+  authDomain: "scrumpokergithubio.firebaseapp.com",
+  databaseURL: "https://scrumpokergithubio-default-rtdb.firebaseio.com",
+  projectId: "scrumpokergithubio",
+  storageBucket: "scrumpokergithubio.firebasestorage.app",
+  messagingSenderId: "553199759268",
+  appId: "1:553199759268:web:a3d6f45f483ed3d2d51b31"
 };
 
 // Initialize Firebase
