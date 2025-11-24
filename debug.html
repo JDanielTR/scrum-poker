@@ -303,13 +303,10 @@
             // Check 1: Firebase SDK carregado
             checks.push(checkFirebaseSDK());
 
-            // Check 2: Variáveis de ambiente
-            checks.push(checkEnvironmentVariables());
-
-            // Check 3: Inicialização do Firebase
+            // Check 2: Inicialização do Firebase
             checks.push(checkFirebaseInit());
 
-            // Check 4: Conectividade do Database
+            // Check 3: Conectividade do Database
             if (database) {
                 checkDatabaseConnectivity().then(result => {
                     checks.push(result);
@@ -334,24 +331,6 @@
                     icon: '❌',
                     title: 'Firebase SDK',
                     message: 'SDK do Firebase não encontrado'
-                };
-            }
-        }
-
-        function checkEnvironmentVariables() {
-            if (window.ENV) {
-                return {
-                    status: 'success',
-                    icon: '✅',
-                    title: 'Variáveis de Ambiente',
-                    message: 'window.ENV definido (env.js carregado)'
-                };
-            } else {
-                return {
-                    status: 'warning',
-                    icon: '⚠️',
-                    title: 'Variáveis de Ambiente',
-                    message: 'window.ENV não definido - usando configuração padrão'
                 };
             }
         }
