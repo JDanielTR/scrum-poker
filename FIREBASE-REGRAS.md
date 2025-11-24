@@ -40,6 +40,8 @@ As regras de segurança do Firebase Realtime Database estão bloqueando o acesso
 {
   "rules": {
     "rooms": {
+      ".read": true,
+      ".write": true,
       "$roomId": {
         ".read": true,
         ".write": true
@@ -65,15 +67,24 @@ As regras de segurança do Firebase Realtime Database estão bloqueando o acesso
 ```json
 {
   "rules": {
-    "rooms": {              // Apenas o caminho /rooms
+    "rooms": {
+      ".read": true,        // ✅ Permite listar todas as salas
+      ".write": true,       // ✅ Permite criar novas salas
       "$roomId": {          // Para qualquer sala específica
-        ".read": true,      // ✅ Qualquer um pode ler
-        ".write": true      // ✅ Qualquer um pode escrever
+        ".read": true,      // ✅ Qualquer um pode ler a sala
+        ".write": true      // ✅ Qualquer um pode escrever na sala
       }
     }
   }
 }
 ```
+
+**Permissões concedidas:**
+
+- ✅ Listar todas as salas: `/rooms`
+- ✅ Criar nova sala: `/rooms/NOVAID`
+- ✅ Ler dados de uma sala: `/rooms/SAFOZU`
+- ✅ Atualizar dados de uma sala: `/rooms/SAFOZU/participants`
 
 ## ⚠️ Nota sobre Segurança
 
